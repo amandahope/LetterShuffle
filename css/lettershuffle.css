@@ -1,0 +1,75 @@
+body {
+    border: thin solid black;
+}
+
+h1, h2 {
+    margin: 1%;
+    display: inline;
+}
+
+input:disabled,
+button:disabled {
+    color: #c1c1c1;
+}
+
+input:disabled:hover,
+button:disabled:hover {
+    border: 1px solid #bbb;
+}
+
+.error {
+    display: none;
+    color: red;
+    margin: 1%;
+}
+
+#min, #sec {
+    display: none;
+}
+
+#letterdiv {
+    padding: 1%;
+    margin: 1%;
+    border: thin solid black;   
+}
+
+#directions,
+#scoreandtime,
+#buttondiv {
+    margin: 1%;
+}
+
+#letter0,
+#letter1,
+#letter2,
+#letter3,
+#letter4,
+#letter5 {
+    font-size: 150%;
+    background-color: #f4f392;
+    border: thin solid black;
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1%;
+    margin: 1%;
+    font-weight: bold;
+}
+
+#correctwordlist {
+    border: thin solid black;
+    padding: 1%;
+    margin: 1%;
+}
+
+footer {
+    font-size: small;
+    text-align: center;
+    border: thin solid black;
+    padding: 1%;
+    margin: 1%;
+}
+
+form {
+    display: inline;
+}

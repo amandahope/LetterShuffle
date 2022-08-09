@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <title>LetterShuffle</title>
+    <meta charset="utf-8" />
+    <meta name=viewport content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+    <script type="text/javascript" src="js/jquery-1.12.2.min.js"></script>
+    <script type="text/javascript" src="js/lettershuffle.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/lettershuffle.css" />
+</head>
+<body class="container">
+    <h1>LetterShuffle!</h1>
+    <h2>A JavaScript-Based Word Game</h2>
+    <div id="scoreandtime" class="row">
+        <span id="highscoreinfo" class="five columns">High Score: <span id="highscore">0</span><span id="nameanddate"></span></span>
+        <span id="currentscore" class="three columns">Current Score: <span id="currentscorenumber">0</span></span>
+        <span id="timeremaining" class="three columns">Time Remaining: <span id="min">3</span>:<span id="sec">00</span></span>
+    </div>
+    <div id="letterdiv" class="row">
+        <span id="letter0" class="two columns"></span>
+        <span id="letter1" class="two columns"></span>
+        <span id="letter2" class="two columns"></span>
+        <span id="letter3" class="two columns"></span>
+        <span id="letter4" class="two columns"></span>
+        <span id="letter5" class="two columns"></span>
+    </div>
+    <div id="buttondiv" class="row">
+        <form id="form">
+            <input placeholder="Type your words here" type="text" name="words" id="words" class="three columns" disabled>
+            <button class="two columns" type="submit" id="submit" disabled>Submit</button>
+        </form>
+        <button id="shuffle" class="two columns" disabled>Shuffle</button>
+        <button id="newgame" class="two columns">New Game</button>
+    </div>
+    </div>
+    <div class="row">
+        <span class="error" id="notaword">Not a word! (According to our dictionary)</span>
+        <span class="error" id="invalid">You can't make that word with these letters!</span>
+        <span class="error" id="alreadyused">You already entered that word!</span>
+    </div>
+    <div class="row" id="correctwordlist">My Words:<br /></div>
+    <div class="row" id="directions">
+        <h3>Directions:</h3>
+        <ul>
+            <li>Click "New Game" to start a game.</li>
+            <li>Type words 2-6 letters long that you can make from the 6 letters given.</li>
+            <li>Press Enter or click Submit after each word. If the word is valid, it will be added to the list. If not, you'll get an error.</li>
+            <li>To rearrange the letters during the game, click Shuffle.</li>
+            <li>The game ends after 3 minutes.</li>
+            <li>High scores will be saved in the browser.</li>
+        </ul>
+    </div>
+    <footer class="row">The word lists used to power this game are provided by <a href="http://www.wordgamedictionary.com">WordGameDictionary.com</a><br />Layout is based on the <a href="http://getskeleton.com/">Skeleton</a> CSS framework.</footer></div>
+</body>
+</html>
