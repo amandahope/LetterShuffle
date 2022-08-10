@@ -30,7 +30,7 @@ button:disabled:hover {
 #letterdiv {
     padding: 1%;
     margin: 1%;
-    border: thin solid black;   
+    border: thin solid black;
 }
 
 #directions,
@@ -68,6 +68,10 @@ footer {
     border: thin solid black;
     padding: 1%;
     margin: 1%;
+}
+
+footer a {
+    color: #19809F;
 }
 
 form {
