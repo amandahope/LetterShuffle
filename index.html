@@ -29,6 +29,9 @@
         <span id="letter4" class="two columns"></span>
         <span id="letter5" class="two columns"></span>
     </div>
+    <div class="row">
+        <span id="totalwords"></span>
+    </div>
     <div id="buttondiv" class="row">
         <form id="form">
             <input placeholder="Type your words here" type="text" name="words" id="words" class="three columns" title="Type your words here" disabled>
@@ -39,11 +42,10 @@
     </div>
     </div>
     <div class="row">
-        <span class="error" id="notaword">Not a word! (According to our dictionary)</span>
-        <span class="error" id="invalid">You can't make that word with these letters!</span>
+        <span class="error" id="notaword">Invalid word!</span>
         <span class="error" id="alreadyused">You already entered that word!</span>
     </div>
-    <div class="row" id="correctwordlist">My Words:<br /></div>
+    <div class="row" id="correctwordlist"></div>
     <div class="row" id="directions">
         <h3>Directions:</h3>
         <ul>

@@ -23,7 +23,7 @@ button:disabled:hover {
     margin: 1%;
 }
 
-#min, #sec {
+#min, #sec, #correctwordlist {
     display: none;
 }
 
@@ -33,6 +33,7 @@ button:disabled:hover {
     border: thin solid black;
 }
 
+#totalwords,
 #directions,
 #scoreandtime,
 #buttondiv {

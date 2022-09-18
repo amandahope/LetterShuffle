@@ -4,6 +4,8 @@ $(function() {
     getHighScore();
     var timer;
 
+
+    // get the high score and display it
     function getHighScore() {
         if (window.localStorage.highScoreInfo) {
             var retrievedScore = window.localStorage.getItem("highScoreInfo");
@@ -13,12 +15,14 @@ $(function() {
 
     //get the New Game button and set up a click handler
     $("#newgame").click(function () {
-        //get a six-letter word and find all permutations of its letters
-        getWord(anagramIt);
+        //get word lists, choose a six-letter word and find all permutations of its letters
+        getWordLists.then(
+            function(value) {anagramIt(value);}
+        );
         //remove previous event handler from submit button
         $("form").off("submit");
         //remove previous word list
-        $("#correctwordlist").html("My Words:<br />");
+        $("#correctwordlist").show().html('You\'ve found <span id="foundwords">0</span> word<span id="plural">s</span>:<br />');
         //clear previous score
         $("#currentscorenumber").html("0");
         //hide any previous errors
@@ -48,44 +52,55 @@ $(function() {
             $("#min").html(parseInt($("#min").html() - 1));
             $("#sec").html(59);
         } else {
-            //when time is zero, stop the timer
-            clearInterval(timer);
-            //and disable the text entry field, the shuffle button, and the submit button
-            $("#words").prop("disabled", true);
-            $("#shuffle").prop("disabled", true);
-            $("#submit").prop("disabled", true);
-            //if the current score is greater than the high score
-            if(parseInt($("#currentscorenumber").html()) > parseInt($("#highscore").html())) {
-                //let the user know they have a high score and ask for their name
-                var userName = prompt("You got a new high score! Please enter your name.");
-                //output score, name, and date to the page
-                $("#highscore").html($("#currentscorenumber").html());
-                $("#nameanddate").html(" by " + userName + " on " + new Date().toLocaleDateString());
-                //store them in the browser
-                window.localStorage.setItem("highScoreInfo", $("#highscoreinfo").html());
-            } else {
-            // if not, alert the user that the game is over
+            //when time is zero, end the game
             alert("Game Over!");
+            endGame();
             }
+    }
+
+    // stuff to do at the end of the game
+    function endGame () {
+        //stop the timer
+        clearInterval(timer);
+        //and disable the text entry field, the shuffle button, and the submit button
+        $("#words").prop("disabled", true);
+        $("#shuffle").prop("disabled", true);
+        $("#submit").prop("disabled", true);
+        //if the current score is greater than the high score
+        if(parseInt($("#currentscorenumber").html()) > parseInt($("#highscore").html())) {
+            //let the user know they have a high score and ask for their name
+            var userName = prompt("You got a new high score! Please enter your name.");
+            //output score, name, and date to the page
+            $("#highscore").html($("#currentscorenumber").html());
+            $("#nameanddate").html(" by " + userName + " on " + new Date().toLocaleDateString());
+            //store them in the browser
+            window.localStorage.setItem("highScoreInfo", $("#highscoreinfo").html());
         }
     }
 
-    //get the JSON list of six-letter words and choose a word at random
-    function getWord (callback) {
-        $.ajax({
-        url:"wordlists/6-letter-words.json",
-        dataType: "JSON",
-        success: function(data) {
-            var sixLetterWordList = data;
-            //choose a six-letter word at random from the word object
-            var randomWord = sixLetterWordList[parseInt(Math.random() * sixLetterWordList.length)].word;
-            callback(randomWord);
-            }
-        });
-    }
+    //get the word lists and assign them to variables
+    let getWordLists = new Promise (function(resolve) {
+        var wordLists = [];
+        for (var x = 2; x <7; x++) {
+            (function (x) {
+                 $.ajax({
+                    url:"wordlists/" + x + "-letter-words.json",
+                    dataType: "JSON",
+                    success: function(data) {
+                         //assign the word list to a variable
+                         wordLists[x] = data;
+                    }
+                });
+            })(x);
+        }
+        resolve(wordLists);
+    });
 
-    //find all the permutations of the letters in that word
-    function anagramIt(randomWord) {
+    //find all the permutations of the letters in a random 6-letter word
+    function anagramIt(wordLists) {
+
+        //choose a six-letter word at random
+        var randomWord = wordLists[6][parseInt(Math.random() * wordLists[6].length)].word;
 
         //put each letter of that word into a letter array
         var letterArray = randomWord.split("");
@@ -104,8 +119,12 @@ $(function() {
 
                 //check if it's in the string array
                 if (anagramArray.some(matchString) === false) {
-                    //if not, add to the string array
-                    anagramArray.push(letterString);
+                    //if not, check if it's a word
+
+                    if (wordLists[letterString.length].some(matchAnagramToWord) === true) {
+                        //if it is, add it to the array
+                        anagramArray.push(letterString);
+                    }
                 }
             }
             //make a new array without the item that we just added
@@ -120,10 +139,17 @@ $(function() {
             letterString = letterString.substring(0, letterString.length-1);
         }
 
-        //function that we used earlier to avoid duplicates in the anagram array
+        //output the total number of words to the page
+        $("#totalwords").html("Find all " + anagramArray.length + " words to win!");
+
+        //function to find real words
+        function matchAnagramToWord (value) {
+            return value.word == letterString;
+        }
+
+        //function to avoid duplicates in the anagram array
         function matchString (value) {
             return value == letterString;
-
         }
 
         //shuffle the letters of the word and output it to the page
@@ -188,36 +214,36 @@ $(function() {
             function isFairWord(word, array) {
                 //check if the word is in the anagram array
                 if (array.some(match)) {
-                    //if it is, check if the word is a Scrabble word
-                    $.ajax({
-                        url:"wordlists/" + word.length + "-letter-words.json",
-                        dataType: "JSON",
-                        success: function(data) {
-                            if (data.some(matchWordList)) {
-                                //if so, check if it's already been submitted
-                                if(correctWordArray.some(match)) {
-                                    //if so, return an error
-                                    $("#alreadyused").show();
-                                } else {
-                                    //if not, add to array
-                                    correctWordArray.push(word);
-                                    // and output to a list on the page
-                                    $("#correctwordlist").html($("#correctwordlist").html() + word + ", ");
-                                    //and update the score based on the length of the word
-                                    $("#currentscorenumber").html(parseInt($("#currentscorenumber").html()) + Math.pow(word.length, 2));
-                                }
-                            //if not a Scrabble word, return an error
-                            } else {
-                            $("#notaword").show();
-                            }
+                    //check if it's already been submitted
+                    if(correctWordArray.some(match)) {
+                        //if so, return an error
+                        $("#alreadyused").show();
+                    } else {
+                        //if not, add to array
+                        correctWordArray.push(word);
+                        // and output to a list on the page
+                        $("#correctwordlist").html($("#correctwordlist").html() + word + ", ");
+                        //update the found word count on the page
+                        $("#foundwords").html(correctWordArray.length);
+                        if (correctWordArray.length === 1) {
+                            $("#plural").hide();
+                        } else {
+                            $("#plural").show();
                         }
-                    });
-                    //if not in the anagram array, return an error
+                        //and update the score based on the length of the word
+                        $("#currentscorenumber").html(parseInt($("#currentscorenumber").html()) + Math.pow(word.length, 2));
+                        // if all words have been found, stop the timer and end the game
+                        if (correctWordArray.length === anagramArray.length) {
+                            alert("Congratulations, you won!");
+                            endGame();
+                        }
+                    }
+                //if not a word, return an error
                 } else {
-                    $("#invalid").show();
+                    $("#notaword").show();
                 }
-
             }
+
 
         });
 
